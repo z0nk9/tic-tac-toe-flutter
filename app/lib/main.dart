@@ -1,3 +1,5 @@
+import 'dart:ffi' hide Size;
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Tic Tac Toe',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,9 +30,9 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.dark(primary: Color.fromRGBO(255, 0, 0, 1)),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Tic Tac Toe'),
     );
   }
 }
@@ -54,16 +56,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<List<Move>> _board = [
+    [Move.empty, Move.empty, Move.empty],
+    [Move.empty, Move.empty, Move.empty],
+    [Move.empty, Move.empty, Move.empty],
+  ];
+  Move _turn = Move.x;
 
-  void _incrementCounter() {
+  void _setSquareValue(int x, int y, Move desiredValue) {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      _board[x][y] = desiredValue;
     });
   }
 
@@ -80,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -102,21 +109,62 @@ class _MyHomePageState extends State<MyHomePage> {
           // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    if (_turn == Move.o) {
+                      _turn = Move.x;
+                    } else {
+                      _turn = Move.o;
+                    }
+                    _setSquareValue(0, 0, _turn);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(125, 125),
+                    backgroundColor: Color.fromRGBO(55, 55, 55, .75),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(_board[0][0].display),
+                ),
+              ],
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  Widget BoardTile(int x, int y) {
+    return ElevatedButton(
+      onPressed: () {
+        if (_turn == Move.o) {
+          _turn = Move.x;
+        } else {
+          _turn = Move.o;
+        }
+        _setSquareValue(0, 0, _turn);
+      },
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(125, 125),
+        backgroundColor: Color.fromRGBO(55, 55, 55, .75),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: Text(_board[0][0].display),
+    );
+  }
+}
+
+enum Move {
+  empty(""),
+  x("X"),
+  o("O");
+
+  final String display;
+  const Move(this.display);
 }
