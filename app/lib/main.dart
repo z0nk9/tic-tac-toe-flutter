@@ -109,29 +109,34 @@ class _MyHomePageState extends State<MyHomePage> {
           // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 20,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 20,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    if (_turn == Move.o) {
-                      _turn = Move.x;
-                    } else {
-                      _turn = Move.o;
-                    }
-                    _setSquareValue(0, 0, _turn);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(125, 125),
-                    backgroundColor: Color.fromRGBO(55, 55, 55, .75),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(_board[0][0].display),
-                ),
+                boardTile(0, 0),
+                boardTile(0, 1),
+                boardTile(0, 2)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 20,
+              children: [
+                boardTile(1, 0),
+                boardTile(1, 1),
+                boardTile(1, 2)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 20,
+              children: [
+                boardTile(2, 0),
+                boardTile(2, 1),
+                boardTile(2, 2)
               ],
             ),
           ],
@@ -140,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget BoardTile(int x, int y) {
+  Widget boardTile(int x, int y) {
     return ElevatedButton(
       onPressed: () {
         if (_turn == Move.o) {
@@ -148,14 +153,14 @@ class _MyHomePageState extends State<MyHomePage> {
         } else {
           _turn = Move.o;
         }
-        _setSquareValue(0, 0, _turn);
+        _setSquareValue(x, y, _turn);
       },
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size(125, 125),
+        minimumSize: const Size.square(150),
         backgroundColor: Color.fromRGBO(55, 55, 55, .75),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      child: Text(_board[0][0].display),
+      child: Text(_board[x][y].display, style: TextStyle(fontSize: 80))
     );
   }
 }
