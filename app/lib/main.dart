@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ffi' hide Size;
 
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<List<Move>> _board = [
+  final List<List<Move>> _board = [
     [Move.empty, Move.empty, Move.empty],
     [Move.empty, Move.empty, Move.empty],
     [Move.empty, Move.empty, Move.empty],
@@ -115,29 +116,17 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 20,
-              children: [
-                boardTile(0, 0),
-                boardTile(0, 1),
-                boardTile(0, 2)
-              ],
+              children: [boardTile(0, 0), boardTile(0, 1), boardTile(0, 2)],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 20,
-              children: [
-                boardTile(1, 0),
-                boardTile(1, 1),
-                boardTile(1, 2)
-              ],
+              children: [boardTile(1, 0), boardTile(1, 1), boardTile(1, 2)],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 20,
-              children: [
-                boardTile(2, 0),
-                boardTile(2, 1),
-                boardTile(2, 2)
-              ],
+              children: [boardTile(2, 0), boardTile(2, 1), boardTile(2, 2)],
             ),
           ],
         ),
@@ -148,19 +137,21 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget boardTile(int x, int y) {
     return ElevatedButton(
       onPressed: () {
-        if (_turn == Move.o) {
-          _turn = Move.x;
-        } else {
-          _turn = Move.o;
+        if (_board[x][y] == Move.empty) {
+          if (_turn == Move.o) {
+            _turn = Move.x;
+          } else {
+            _turn = Move.o;
+          }
+          _setSquareValue(x, y, _turn);
         }
-        _setSquareValue(x, y, _turn);
       },
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.square(150),
         backgroundColor: Color.fromRGBO(55, 55, 55, .75),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      child: Text(_board[x][y].display, style: TextStyle(fontSize: 80))
+      child: Text(_board[x][y].display, style: TextStyle(fontSize: 80)),
     );
   }
 }
