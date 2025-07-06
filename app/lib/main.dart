@@ -63,6 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
     [Move.empty, Move.empty, Move.empty],
   ];
   Move _turn = Move.x;
+  String _textDisplay = "";
+  bool _retryVisible = false;
 
   void _setSquareValue(int x, int y, Move desiredValue) {
     setState(() {
@@ -113,20 +115,35 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 20,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 20,
-              children: [boardTile(0, 0), boardTile(0, 1), boardTile(0, 2)],
+            Text(
+              _textDisplay,
+              style: TextStyle(
+                fontSize: 30,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 20,
-              children: [boardTile(1, 0), boardTile(1, 1), boardTile(1, 2)],
+              children: [_boardTile(0, 0), _boardTile(0, 1), _boardTile(0, 2)],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 20,
-              children: [boardTile(2, 0), boardTile(2, 1), boardTile(2, 2)],
+              children: [_boardTile(1, 0), _boardTile(1, 1), _boardTile(1, 2)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 20,
+              children: [_boardTile(2, 0), _boardTile(2, 1), _boardTile(2, 2)],
+            ),
+            Visibility(
+              visible: _retryVisible,
+              child: ElevatedButton(
+                onPressed: _clearBoard,
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary)),
+                child: Text("Retry", style: TextStyle(fontSize: 30, color: Theme.of(context).colorScheme.onPrimary)),
+              ),
             ),
           ],
         ),
@@ -134,16 +151,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget boardTile(int x, int y) {
+  Widget _boardTile(int x, int y) {
     return ElevatedButton(
       onPressed: () {
-        if (_board[x][y] == Move.empty) {
-          if (_turn == Move.o) {
-            _turn = Move.x;
-          } else {
-            _turn = Move.o;
+        if (_textDisplay == "") {
+          if (_board[x][y] == Move.empty) {
+            if (_turn == Move.o) {
+              _turn = Move.x;
+            } else {
+              _turn = Move.o;
+            }
+            _setSquareValue(x, y, _turn);
           }
-          _setSquareValue(x, y, _turn);
+          _checkWinner();
         }
       },
       style: ElevatedButton.styleFrom(
@@ -153,6 +173,79 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       child: Text(_board[x][y].display, style: TextStyle(fontSize: 80)),
     );
+  }
+
+  void _checkWinner() {
+    setState(() {
+      List<Move> three = [];
+      //column checking
+      for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+          three.add(_board[i][j]);
+        }
+        if (three.every((move) => move == Move.x)) {
+          _textDisplay = "Player X wins!!";
+          _retryVisible = true;
+        }
+        if (three.every((move) => move == Move.o)) {
+          _textDisplay = "Player O wins!!";
+          _retryVisible = true;
+        }
+        three.clear();
+      }
+      //row checking
+      for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+          three.add(_board[j][i]);
+        }
+        if (three.every((move) => move == Move.x)) {
+          _textDisplay = "Player X wins!!";
+          _retryVisible = true;
+        }
+        if (three.every((move) => move == Move.o)) {
+          _textDisplay = "Player O wins!!";
+          _retryVisible = true;
+        }
+        three.clear();
+      }
+
+      //diagonal checking
+      three.add(_board[0][0]);
+      three.add(_board[1][1]);
+      three.add(_board[2][2]);
+      if (three.every((move) => move == Move.x)) {
+        _textDisplay = "Player X wins!!";
+        _retryVisible = true;
+      }
+      if (three.every((move) => move == Move.o)) {
+        _textDisplay = "Player O wins!!";
+        _retryVisible = true;
+      }
+      three.clear();
+
+      three.add(_board[0][2]);
+      three.add(_board[1][1]);
+      three.add(_board[2][0]);
+      if (three.every((move) => move == Move.x)) {
+        _textDisplay = "Player X wins!!";
+        _retryVisible = true;
+      }
+      if (three.every((move) => move == Move.o)) {
+        _textDisplay = "Player O wins!!";
+        _retryVisible = true;
+      }
+      three.clear();
+    });
+  }
+
+  void _clearBoard() {
+    setState(() {
+      for (var i = 0; i < _board.length; i++) {
+        _board[i].fillRange(0, _board[i].length, Move.empty);
+      }
+      _textDisplay = "";
+      _retryVisible = false;
+    });
   }
 }
 
