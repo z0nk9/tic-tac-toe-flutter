@@ -108,18 +108,17 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
           spacing: 20,
           children: [
-            Text(
-              _textDisplay,
-              style: TextStyle(
-                fontSize: 30,
-                color: Theme.of(context).colorScheme.primary,
+            Container(
+              padding: EdgeInsets.only(top: 10),
+              alignment: Alignment.center,
+              child: Text(
+                _textDisplay,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
             Row(
@@ -137,12 +136,19 @@ class _MyHomePageState extends State<MyHomePage> {
               spacing: 20,
               children: [_boardTile(2, 0), _boardTile(2, 1), _boardTile(2, 2)],
             ),
-            Visibility(
-              visible: _retryVisible,
-              child: ElevatedButton(
-                onPressed: _clearBoard,
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary)),
-                child: Text("Retry", style: TextStyle(fontSize: 30, color: Theme.of(context).colorScheme.onPrimary)),
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              child: Visibility(
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _retryVisible,
+                child: ElevatedButton(
+                  onPressed: _clearBoard,
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary)),
+                  child: Text("Retry", style: TextStyle(fontSize: 30, color: Theme.of(context).colorScheme.onPrimary)),
+                ),
               ),
             ),
           ],
