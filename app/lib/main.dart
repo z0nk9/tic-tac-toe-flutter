@@ -242,6 +242,18 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       three.clear();
     });
+    bool _emptySpotted = false;
+    for (var i = 0; i < 3; i++) {
+      for (var j = 0; i < 3; i++) {
+        if (_board[i][j] == Move.empty) {
+          _emptySpotted = true;
+        }
+      }
+    }
+    if (_emptySpotted == false) {
+      _textDisplay = "It's a draw!";
+      _retryVisible = true;
+    }
   }
 
   void _clearBoard() {
